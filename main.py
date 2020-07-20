@@ -126,35 +126,44 @@ p2 = player()
 turn = p1
 play_game = ""
 spot_key = 0
+valid_spots = ["A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3"]
+valid_selection = False
+spots_used = []
 
 print("Let's play Tic-Tac-Toe!\n")
 
 get_players()
 
-print("Make your selection by typing the Row and Column. ex: 'A1' or 'C2'.")
-valid_spots = ["A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3"]
-valid_selection = False
-spots_used = []
+time.sleep(2)
+print("\nMake your selection by typing the Row and Column. ex: 'A1' or 'C2'.")
+time.sleep(2)
+
+
 
 while play_game != "quit":
-    print("\n" + turn.name + ", it is your turn.")
+    print("\n" + turn.name + ", it is your turn.\n")
     display_board()
     valid_selection = False
     while not valid_selection:
         selection = str(input("\nMake your move: ")).upper()
-        if selection not in valid_spots:
-            print("Please make a valid selection.")
-            valid_selection = False
-            spot_key = 0
-        elif selection in spots_used:
-            print("That spot has already been played. Please try again.")
-            valid_selection = False
+        if selection.lower() != "quit":
+            if selection not in valid_spots:
+                print("Please make a valid selection.")
+                valid_selection = False
+                spot_key = 0
+            elif selection in spots_used:
+                print("That spot has already been played. Please try again.")
+                valid_selection = False
+            else:
+                spot_key = int(convert_key(selection))
+                valid_selection = True
         else:
-            spot_key = int(convert_key(selection))
-            valid_selection = True
+            play_game = selection.lower()
+            break
     board[spot_key] = turn.symb.upper()
     spots_used.append(valid_spots[spot_key])
     print('\n')
+    
     winner = check_win()
     if not winner:
         tie = check_tie()
@@ -162,6 +171,8 @@ while play_game != "quit":
             turn = flip_player()
         else:
             print("We have a tie!!")
+            board = empty_board()
+            spots_used = []
             play_game = keep_playing()
 
     else:
@@ -181,5 +192,5 @@ while play_game != "quit":
 print("Here is the final score: ")
 print(p1.name + ": " + str(p1.wins) + " win(s)")
 print(p2.name + ": " + str(p2.wins) + " win(s)")
-print("Thanks for playing!")
+print("\nThanks for playing!")
 time.sleep(3)
